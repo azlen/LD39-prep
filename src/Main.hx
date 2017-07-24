@@ -1,23 +1,74 @@
 
 import luxe.Input;
 
+import entities.Player;
+
+import luxe.gifcapture.LuxeGifCapture;
+import dialogs.Dialogs; // dialogs for saving gifs
+
 class Main extends luxe.Game {
 
-    override function ready() {
+	var capture : LuxeGifCapture;
 
-    } //ready
+	override function ready() {
 
-    override function onkeyup( e:KeyEvent ) {
+		new Player();
 
-        if(e.keycode == Key.escape) {
-            Luxe.shutdown();
-        }
+		connect_input();
+ 		
+ 		init_gifcapture();		
 
-    } //onkeyup
+	} // ready
 
-    override function update(dt:Float) {
+	override function onkeyup( e:KeyEvent ) {
 
-    } //update
+		if(e.keycode == Key.space) {
+			if(capture.state == Paused) {
+				capture.record();
+				trace('recording: active');
+			} else if (capture.state == Recording) {
+				capture.pause();
+				trace('recording: paused');
+			}
+		}
+
+		if(e.keycode == Key.escape) {
+			Luxe.shutdown();
+		}
+
+	} // onkeyup
+
+	override function update(dt:Float) {
+
+	} // update
+
+	function connect_input() {
+
+		// WASD controls
+
+		Luxe.input.bind_key('up', Key.key_w);
+		Luxe.input.bind_key('left', Key.key_a);
+		Luxe.input.bind_key('down', Key.key_s);
+		Luxe.input.bind_key('right', Key.key_d);
+
+	} // connect_input
+
+	function init_gifcapture() {
+
+		capture = new LuxeGifCapture({
+			width: Std.int(Luxe.screen.w/2),
+			height: Std.int(Luxe.screen.h/2),
+			fps: 50, 
+			max_time: 5,
+			quality: GifQuality.Worst,
+			repeat: GifRepeat.Infinite,
+			oncomplete: function(_bytes:haxe.io.Bytes) {
+				var path = Dialogs.save('Save GIF');
+				if(path != '') sys.io.File.saveBytes(path, _bytes);
+	    	}
+		});
+
+	} // init_gifcapture
 
 
 } //Main

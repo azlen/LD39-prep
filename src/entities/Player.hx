@@ -15,9 +15,9 @@ class Player extends Sprite {
 
 		// initialize player
 		super({
-			name: 'player',
+			name: 'Player',
 			pos: Luxe.screen.mid,
-			color: new Color().rgb(0xf94b04),
+			color: new Color().rgb(0x00FFA6),
 			size: new Vector(32, 64)
 		});
 

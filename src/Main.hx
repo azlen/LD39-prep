@@ -3,6 +3,8 @@ import luxe.Input;
 
 import entities.Player;
 
+import entities.Enemy;
+
 import luxe.gifcapture.LuxeGifCapture;
 import dialogs.Dialogs; // dialogs for saving gifs
 
@@ -13,6 +15,8 @@ class Main extends luxe.Game {
 	override function ready() {
 
 		new Player();
+
+		new Enemy();
 
 		connect_input();
  		
@@ -27,8 +31,8 @@ class Main extends luxe.Game {
 				capture.record();
 				trace('recording: active');
 			} else if (capture.state == Recording) {
-				capture.pause();
-				trace('recording: paused');
+				capture.commit();
+				trace('recording: committed');
 			}
 		}
 
@@ -58,8 +62,8 @@ class Main extends luxe.Game {
 		capture = new LuxeGifCapture({
 			width: Std.int(Luxe.screen.w/2),
 			height: Std.int(Luxe.screen.h/2),
-			fps: 50, 
-			max_time: 5,
+			fps: 30, 
+			max_time: 10,
 			quality: GifQuality.Worst,
 			repeat: GifRepeat.Infinite,
 			oncomplete: function(_bytes:haxe.io.Bytes) {

@@ -2,7 +2,8 @@ package entities;
 
 import luxe.Sprite;
 
-import components.PlayerMovement;
+import components.Movement;
+import components.PlayerController;
 import components.MovementParticles;
 
 import luxe.Color;
@@ -20,8 +21,9 @@ class Player extends Sprite {
 			size: new Vector(32, 64)
 		});
 
-		// attach movement component
-		add(new PlayerMovement());
+		// attach player controller
+		add(new Movement()); // handles movement
+		add(new PlayerController()); // handles input
 
 		// attach movement particles component
 		add(new MovementParticles());

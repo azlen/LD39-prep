@@ -396,6 +396,9 @@ Main.__super__ = luxe_Game;
 Main.prototype = $extend(luxe_Game.prototype,{
 	ready: function() {
 		new entities_Player();
+		new entities_Enemy();
+		this.connect_input();
+		this.init_gifcapture();
 	}
 	,onkeyup: function(e) {
 		if(e.keycode == 27) {
@@ -403,6 +406,14 @@ Main.prototype = $extend(luxe_Game.prototype,{
 		}
 	}
 	,update: function(dt) {
+	}
+	,connect_input: function() {
+		Luxe.input.bind_key("up",119);
+		Luxe.input.bind_key("left",97);
+		Luxe.input.bind_key("down",115);
+		Luxe.input.bind_key("right",100);
+	}
+	,init_gifcapture: function() {
 	}
 	,__class__: Main
 });
@@ -697,6 +708,1040 @@ Type["typeof"] = function(v) {
 		return ValueType.TUnknown;
 	}
 };
+var luxe_ID = function(_name,_id) {
+	if(_id == null) {
+		_id = "";
+	}
+	if(_name == null) {
+		_name = "";
+	}
+	this.name = "";
+	this.name = _name;
+	this.id = _id == "" ? Luxe.utils.uniqueid() : _id;
+};
+$hxClasses["luxe.ID"] = luxe_ID;
+luxe_ID.__name__ = ["luxe","ID"];
+luxe_ID.prototype = {
+	__class__: luxe_ID
+};
+var luxe_Component = function(_options) {
+	var _name = "";
+	if(_options != null) {
+		if(_options.name != null) {
+			_name = _options.name;
+		}
+	}
+	luxe_ID.call(this,_name == "" ? Luxe.utils.uniqueid() : _name);
+};
+$hxClasses["luxe.Component"] = luxe_Component;
+luxe_Component.__name__ = ["luxe","Component"];
+luxe_Component.__super__ = luxe_ID;
+luxe_Component.prototype = $extend(luxe_ID.prototype,{
+	init: function() {
+	}
+	,update: function(dt) {
+	}
+	,onadded: function() {
+	}
+	,onremoved: function() {
+	}
+	,onfixedupdate: function(rate) {
+	}
+	,onreset: function() {
+	}
+	,ondestroy: function() {
+	}
+	,onkeyup: function(event) {
+	}
+	,onkeydown: function(event) {
+	}
+	,ontextinput: function(event) {
+	}
+	,oninputdown: function(event) {
+	}
+	,oninputup: function(event) {
+	}
+	,onmousedown: function(event) {
+	}
+	,onmouseup: function(event) {
+	}
+	,onmousemove: function(event) {
+	}
+	,onmousewheel: function(event) {
+	}
+	,ontouchdown: function(event) {
+	}
+	,ontouchup: function(event) {
+	}
+	,ontouchmove: function(event) {
+	}
+	,ongamepadup: function(event) {
+	}
+	,ongamepaddown: function(event) {
+	}
+	,ongamepadaxis: function(event) {
+	}
+	,ongamepaddevice: function(event) {
+	}
+	,onwindowmoved: function(event) {
+	}
+	,onwindowresized: function(event) {
+	}
+	,onwindowsized: function(event) {
+	}
+	,onwindowminimized: function(event) {
+	}
+	,onwindowrestored: function(event) {
+	}
+	,add: function(component) {
+		var _this = this.get_entity();
+		_this.component_count++;
+		return _this._components.add(component);
+	}
+	,remove: function(_name) {
+		var _this = this.get_entity();
+		_this.component_count--;
+		return _this._components.remove(_name);
+	}
+	,get: function(_name,in_children) {
+		if(in_children == null) {
+			in_children = false;
+		}
+		return this.get_entity()._components.get(_name,in_children);
+	}
+	,get_any: function(_name,in_children,first_only) {
+		if(first_only == null) {
+			first_only = true;
+		}
+		if(in_children == null) {
+			in_children = false;
+		}
+		return this.get_entity()._components.get_any(_name,in_children,first_only);
+	}
+	,has: function(_name) {
+		return this.get_entity()._components.has(_name);
+	}
+	,_detach_entity: function() {
+		var tmp = this.get_entity() != null;
+	}
+	,_attach_entity: function() {
+		var tmp = this.get_entity() != null;
+	}
+	,set_entity: function(_entity) {
+		this._detach_entity();
+		this.entity = _entity;
+		this._attach_entity();
+		return this.get_entity();
+	}
+	,get_entity: function() {
+		return this.entity;
+	}
+	,set_pos: function(_p) {
+		var _this = this.get_entity().get_transform().local;
+		_this.pos = _p;
+		if(_p != null) {
+			var _v = _this.pos;
+			var listener = $bind(_this,_this._pos_change);
+			_v.listen_x = listener;
+			_v.listen_y = listener;
+			_v.listen_z = listener;
+			if(_this.pos_changed != null && !_this.ignore_listeners) {
+				_this.pos_changed(_this.pos);
+			}
+		}
+		return _this.pos;
+	}
+	,get_pos: function() {
+		return this.get_entity().get_transform().local.pos;
+	}
+	,set_rotation: function(_r) {
+		var _this = this.get_entity().get_transform().local;
+		_this.rotation = _r;
+		if(_r != null) {
+			var _q = _this.rotation;
+			var listener = $bind(_this,_this._rotation_change);
+			_q.listen_x = listener;
+			_q.listen_y = listener;
+			_q.listen_z = listener;
+			_q.listen_w = listener;
+			if(_this.rotation_changed != null && !_this.ignore_listeners) {
+				_this.rotation_changed(_this.rotation);
+			}
+		}
+		return _this.rotation;
+	}
+	,get_rotation: function() {
+		return this.get_entity().get_transform().local.rotation;
+	}
+	,set_scale: function(_s) {
+		var _this = this.get_entity().get_transform().local;
+		_this.scale = _s;
+		if(_s != null) {
+			var _v = _this.scale;
+			var listener = $bind(_this,_this._scale_change);
+			_v.listen_x = listener;
+			_v.listen_y = listener;
+			_v.listen_z = listener;
+			if(_this.scale_changed != null && !_this.ignore_listeners) {
+				_this.scale_changed(_this.scale);
+			}
+		}
+		return _this.scale;
+	}
+	,get_scale: function() {
+		return this.get_entity().get_transform().local.scale;
+	}
+	,set_origin: function(_o) {
+		var _this = this.get_entity().get_transform();
+		_this.dirty = true;
+		if(_this.dirty && !_this._setup && _this._dirty_handlers != null && _this._dirty_handlers.length > 0) {
+			var _g = 0;
+			var _g1 = _this._dirty_handlers;
+			while(_g < _g1.length) {
+				var _handler = _g1[_g];
+				++_g;
+				if(_handler != null) {
+					_handler(_this);
+				}
+			}
+		}
+		_this.origin = _o;
+		if(_this._origin_handlers != null && _this._origin_handlers.length > 0) {
+			var _origin = _this.origin;
+			var _g2 = 0;
+			var _g11 = _this._origin_handlers;
+			while(_g2 < _g11.length) {
+				var _handler1 = _g11[_g2];
+				++_g2;
+				if(_handler1 != null) {
+					_handler1(_origin);
+				}
+			}
+		}
+		return _this.origin;
+	}
+	,get_origin: function() {
+		return this.get_entity().get_transform().origin;
+	}
+	,set_transform: function(_o) {
+		return this.get_entity().set_transform(_o);
+	}
+	,get_transform: function() {
+		return this.get_entity().get_transform();
+	}
+	,entity_pos_change: function(_pos) {
+	}
+	,entity_scale_change: function(_scale) {
+	}
+	,entity_rotation_change: function(_rotation) {
+	}
+	,entity_origin_change: function(_origin) {
+	}
+	,entity_parent_change: function(_parent) {
+	}
+	,toString: function() {
+		return "luxe Component: " + this.name + " on " + this.get_entity().get_name() + " / id: " + this.id;
+	}
+	,__class__: luxe_Component
+	,__properties__: {set_origin:"set_origin",get_origin:"get_origin",set_scale:"set_scale",get_scale:"get_scale",set_rotation:"set_rotation",get_rotation:"get_rotation",set_pos:"set_pos",get_pos:"get_pos",set_entity:"set_entity",get_entity:"get_entity"}
+});
+var components_EnemyController = function() {
+	luxe_Component.call(this,{ name : "EnemyController"});
+};
+$hxClasses["components.EnemyController"] = components_EnemyController;
+components_EnemyController.__name__ = ["components","EnemyController"];
+components_EnemyController.__super__ = luxe_Component;
+components_EnemyController.prototype = $extend(luxe_Component.prototype,{
+	init: function() {
+		var _this = Luxe.scene.entities;
+		this.player = __map_reserved["Player"] != null ? _this.getReserved("Player") : _this.h["Player"];
+		this.direction = this.get_entity()._components.get("Movement",false).direction;
+	}
+	,update: function(dt) {
+		var _this = this.direction;
+		var _other = this.player.get_pos();
+		var _x = _other.x;
+		var _y = _other.y;
+		var _z = _other.z;
+		var _w = _other.w;
+		var prev = _this.ignore_listeners;
+		_this.ignore_listeners = true;
+		_this.x = _x;
+		if(!_this._construct) {
+			if(_this.listen_x != null && !_this.ignore_listeners) {
+				_this.listen_x(_x);
+			}
+		}
+		_this.y = _y;
+		if(!_this._construct) {
+			if(_this.listen_y != null && !_this.ignore_listeners) {
+				_this.listen_y(_y);
+			}
+		}
+		_this.z = _z;
+		if(!_this._construct) {
+			if(_this.listen_z != null && !_this.ignore_listeners) {
+				_this.listen_z(_z);
+			}
+		}
+		_this.w = _w;
+		_this.ignore_listeners = prev;
+		if(_this.listen_x != null && !_this.ignore_listeners) {
+			_this.listen_x(_this.x);
+		}
+		if(_this.listen_y != null && !_this.ignore_listeners) {
+			_this.listen_y(_this.y);
+		}
+		if(_this.listen_z != null && !_this.ignore_listeners) {
+			_this.listen_z(_this.z);
+		}
+		var _this1 = _this;
+		var other = this.get_entity().get_pos();
+		if(other == null) {
+			throw new js__$Boot_HaxeError(luxe_DebugError.null_assertion("other was null"));
+		}
+		var _x1 = _this1.x - other.x;
+		var _y1 = _this1.y - other.y;
+		var _z1 = _this1.z - other.z;
+		var prev1 = _this1.ignore_listeners;
+		_this1.ignore_listeners = true;
+		_this1.x = _x1;
+		if(!_this1._construct) {
+			if(_this1.listen_x != null && !_this1.ignore_listeners) {
+				_this1.listen_x(_x1);
+			}
+		}
+		_this1.y = _y1;
+		if(!_this1._construct) {
+			if(_this1.listen_y != null && !_this1.ignore_listeners) {
+				_this1.listen_y(_y1);
+			}
+		}
+		_this1.z = _z1;
+		if(!_this1._construct) {
+			if(_this1.listen_z != null && !_this1.ignore_listeners) {
+				_this1.listen_z(_z1);
+			}
+		}
+		_this1.ignore_listeners = prev1;
+		if(_this1.listen_x != null && !_this1.ignore_listeners) {
+			_this1.listen_x(_this1.x);
+		}
+		if(_this1.listen_y != null && !_this1.ignore_listeners) {
+			_this1.listen_y(_this1.y);
+		}
+		if(_this1.listen_z != null && !_this1.ignore_listeners) {
+			_this1.listen_z(_this1.z);
+		}
+		var _this2 = this.direction;
+		var v = Math.sqrt(_this2.x * _this2.x + _this2.y * _this2.y + _this2.z * _this2.z);
+		if(v != 0) {
+			var _x2 = _this2.x / v;
+			var _y2 = _this2.y / v;
+			var _z2 = _this2.z / v;
+			var prev2 = _this2.ignore_listeners;
+			_this2.ignore_listeners = true;
+			_this2.x = _x2;
+			if(!_this2._construct) {
+				if(_this2.listen_x != null && !_this2.ignore_listeners) {
+					_this2.listen_x(_x2);
+				}
+			}
+			_this2.y = _y2;
+			if(!_this2._construct) {
+				if(_this2.listen_y != null && !_this2.ignore_listeners) {
+					_this2.listen_y(_y2);
+				}
+			}
+			_this2.z = _z2;
+			if(!_this2._construct) {
+				if(_this2.listen_z != null && !_this2.ignore_listeners) {
+					_this2.listen_z(_z2);
+				}
+			}
+			_this2.ignore_listeners = prev2;
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_this2.x);
+			}
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_this2.y);
+			}
+			if(_this2.listen_z != null && !_this2.ignore_listeners) {
+				_this2.listen_z(_this2.z);
+			}
+		} else {
+			var prev3 = _this2.ignore_listeners;
+			_this2.ignore_listeners = true;
+			_this2.x = 0;
+			if(!_this2._construct) {
+				if(_this2.listen_x != null && !_this2.ignore_listeners) {
+					_this2.listen_x(0);
+				}
+			}
+			_this2.y = 0;
+			if(!_this2._construct) {
+				if(_this2.listen_y != null && !_this2.ignore_listeners) {
+					_this2.listen_y(0);
+				}
+			}
+			_this2.z = 0;
+			if(!_this2._construct) {
+				if(_this2.listen_z != null && !_this2.ignore_listeners) {
+					_this2.listen_z(0);
+				}
+			}
+			_this2.ignore_listeners = prev3;
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_this2.x);
+			}
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_this2.y);
+			}
+			if(_this2.listen_z != null && !_this2.ignore_listeners) {
+				_this2.listen_z(_this2.z);
+			}
+		}
+		var _this3 = _this2;
+		var _x3 = _this3.x;
+		var _y3 = _this3.y;
+		var _z3 = _this3.z;
+		var prev4 = _this3.ignore_listeners;
+		_this3.ignore_listeners = true;
+		_this3.x = _x3;
+		if(!_this3._construct) {
+			if(_this3.listen_x != null && !_this3.ignore_listeners) {
+				_this3.listen_x(_x3);
+			}
+		}
+		_this3.y = _y3;
+		if(!_this3._construct) {
+			if(_this3.listen_y != null && !_this3.ignore_listeners) {
+				_this3.listen_y(_y3);
+			}
+		}
+		_this3.z = _z3;
+		if(!_this3._construct) {
+			if(_this3.listen_z != null && !_this3.ignore_listeners) {
+				_this3.listen_z(_z3);
+			}
+		}
+		_this3.ignore_listeners = prev4;
+		if(_this3.listen_x != null && !_this3.ignore_listeners) {
+			_this3.listen_x(_this3.x);
+		}
+		if(_this3.listen_y != null && !_this3.ignore_listeners) {
+			_this3.listen_y(_this3.y);
+		}
+		if(_this3.listen_z != null && !_this3.ignore_listeners) {
+			_this3.listen_z(_this3.z);
+		}
+	}
+	,ondestroy: function() {
+		luxe_Component.prototype.ondestroy.call(this);
+	}
+	,onremoved: function() {
+		luxe_Component.prototype.onremoved.call(this);
+	}
+	,__class__: components_EnemyController
+});
+var components_Movement = function() {
+	this.velocity = new phoenix_Vector(0,0);
+	this.direction = new phoenix_Vector(0,0);
+	this.is_moving = false;
+	this.deceleration_time = 0.25;
+	this.acceleration_time = 0.1;
+	this.max_move_speed = 300;
+	luxe_Component.call(this,{ name : "Movement"});
+};
+$hxClasses["components.Movement"] = components_Movement;
+components_Movement.__name__ = ["components","Movement"];
+components_Movement.__super__ = luxe_Component;
+components_Movement.prototype = $extend(luxe_Component.prototype,{
+	init: function() {
+	}
+	,update: function(dt) {
+		var _this = this.direction;
+		if(Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z) != 0) {
+			var _this1 = this.direction;
+			var v = Math.sqrt(_this1.x * _this1.x + _this1.y * _this1.y + _this1.z * _this1.z);
+			if(v != 0) {
+				var _x = _this1.x / v;
+				var _y = _this1.y / v;
+				var _z = _this1.z / v;
+				var prev = _this1.ignore_listeners;
+				_this1.ignore_listeners = true;
+				_this1.x = _x;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(_x);
+					}
+				}
+				_this1.y = _y;
+				if(!_this1._construct) {
+					if(_this1.listen_y != null && !_this1.ignore_listeners) {
+						_this1.listen_y(_y);
+					}
+				}
+				_this1.z = _z;
+				if(!_this1._construct) {
+					if(_this1.listen_z != null && !_this1.ignore_listeners) {
+						_this1.listen_z(_z);
+					}
+				}
+				_this1.ignore_listeners = prev;
+				if(_this1.listen_x != null && !_this1.ignore_listeners) {
+					_this1.listen_x(_this1.x);
+				}
+				if(_this1.listen_y != null && !_this1.ignore_listeners) {
+					_this1.listen_y(_this1.y);
+				}
+				if(_this1.listen_z != null && !_this1.ignore_listeners) {
+					_this1.listen_z(_this1.z);
+				}
+			} else {
+				var prev1 = _this1.ignore_listeners;
+				_this1.ignore_listeners = true;
+				_this1.x = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(0);
+					}
+				}
+				_this1.y = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_y != null && !_this1.ignore_listeners) {
+						_this1.listen_y(0);
+					}
+				}
+				_this1.z = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_z != null && !_this1.ignore_listeners) {
+						_this1.listen_z(0);
+					}
+				}
+				_this1.ignore_listeners = prev1;
+				if(_this1.listen_x != null && !_this1.ignore_listeners) {
+					_this1.listen_x(_this1.x);
+				}
+				if(_this1.listen_y != null && !_this1.ignore_listeners) {
+					_this1.listen_y(_this1.y);
+				}
+				if(_this1.listen_z != null && !_this1.ignore_listeners) {
+					_this1.listen_z(_this1.z);
+				}
+			}
+			var _this2 = _this1;
+			var _x1 = _this2.x;
+			var _y1 = _this2.y;
+			var _z1 = _this2.z;
+			var prev2 = _this2.ignore_listeners;
+			_this2.ignore_listeners = true;
+			_this2.x = _x1;
+			if(!_this2._construct) {
+				if(_this2.listen_x != null && !_this2.ignore_listeners) {
+					_this2.listen_x(_x1);
+				}
+			}
+			_this2.y = _y1;
+			if(!_this2._construct) {
+				if(_this2.listen_y != null && !_this2.ignore_listeners) {
+					_this2.listen_y(_y1);
+				}
+			}
+			_this2.z = _z1;
+			if(!_this2._construct) {
+				if(_this2.listen_z != null && !_this2.ignore_listeners) {
+					_this2.listen_z(_z1);
+				}
+			}
+			_this2.ignore_listeners = prev2;
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_this2.x);
+			}
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_this2.y);
+			}
+			if(_this2.listen_z != null && !_this2.ignore_listeners) {
+				_this2.listen_z(_this2.z);
+			}
+			this.accelerate(dt);
+			if(this.is_moving == false) {
+				this.get_entity().events.fire("movement.start");
+			}
+			this.is_moving = true;
+		} else {
+			this.decelerate(dt);
+			if(this.is_moving == true) {
+				this.get_entity().events.fire("movement.stop");
+			}
+			this.is_moving = false;
+		}
+		var _g = this.get_pos();
+		var _x2 = _g.x + this.velocity.x * dt;
+		_g.x = _x2;
+		if(!_g._construct) {
+			if(_g.listen_x != null && !_g.ignore_listeners) {
+				_g.listen_x(_x2);
+			}
+		}
+		var _g1 = this.get_pos();
+		var _y2 = _g1.y + this.velocity.y * dt;
+		_g1.y = _y2;
+		if(!_g1._construct) {
+			if(_g1.listen_y != null && !_g1.ignore_listeners) {
+				_g1.listen_y(_y2);
+			}
+		}
+	}
+	,accelerate: function(dt) {
+		var _g = this.velocity;
+		var _x = _g.x + this.direction.x * (this.max_move_speed / this.acceleration_time) * dt;
+		_g.x = _x;
+		if(!_g._construct) {
+			if(_g.listen_x != null && !_g.ignore_listeners) {
+				_g.listen_x(_x);
+			}
+		}
+		var _g1 = this.velocity;
+		var _y = _g1.y + this.direction.y * (this.max_move_speed / this.acceleration_time) * dt;
+		_g1.y = _y;
+		if(!_g1._construct) {
+			if(_g1.listen_y != null && !_g1.ignore_listeners) {
+				_g1.listen_y(_y);
+			}
+		}
+		var _this = this.velocity;
+		if(Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z) > this.max_move_speed) {
+			var _this1 = this.velocity;
+			var value = this.max_move_speed;
+			var v = Math.sqrt(_this1.x * _this1.x + _this1.y * _this1.y + _this1.z * _this1.z);
+			if(v != 0) {
+				var _x1 = _this1.x / v;
+				var _y1 = _this1.y / v;
+				var _z = _this1.z / v;
+				var prev = _this1.ignore_listeners;
+				_this1.ignore_listeners = true;
+				_this1.x = _x1;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(_x1);
+					}
+				}
+				_this1.y = _y1;
+				if(!_this1._construct) {
+					if(_this1.listen_y != null && !_this1.ignore_listeners) {
+						_this1.listen_y(_y1);
+					}
+				}
+				_this1.z = _z;
+				if(!_this1._construct) {
+					if(_this1.listen_z != null && !_this1.ignore_listeners) {
+						_this1.listen_z(_z);
+					}
+				}
+				_this1.ignore_listeners = prev;
+				if(_this1.listen_x != null && !_this1.ignore_listeners) {
+					_this1.listen_x(_this1.x);
+				}
+				if(_this1.listen_y != null && !_this1.ignore_listeners) {
+					_this1.listen_y(_this1.y);
+				}
+				if(_this1.listen_z != null && !_this1.ignore_listeners) {
+					_this1.listen_z(_this1.z);
+				}
+			} else {
+				var prev1 = _this1.ignore_listeners;
+				_this1.ignore_listeners = true;
+				_this1.x = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(0);
+					}
+				}
+				_this1.y = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_y != null && !_this1.ignore_listeners) {
+						_this1.listen_y(0);
+					}
+				}
+				_this1.z = 0;
+				if(!_this1._construct) {
+					if(_this1.listen_z != null && !_this1.ignore_listeners) {
+						_this1.listen_z(0);
+					}
+				}
+				_this1.ignore_listeners = prev1;
+				if(_this1.listen_x != null && !_this1.ignore_listeners) {
+					_this1.listen_x(_this1.x);
+				}
+				if(_this1.listen_y != null && !_this1.ignore_listeners) {
+					_this1.listen_y(_this1.y);
+				}
+				if(_this1.listen_z != null && !_this1.ignore_listeners) {
+					_this1.listen_z(_this1.z);
+				}
+			}
+			var _this2 = _this1;
+			var _x2 = _this2.x * value;
+			var _y2 = _this2.y * value;
+			var _z1 = _this2.z * value;
+			var prev2 = _this2.ignore_listeners;
+			_this2.ignore_listeners = true;
+			_this2.x = _x2;
+			if(!_this2._construct) {
+				if(_this2.listen_x != null && !_this2.ignore_listeners) {
+					_this2.listen_x(_x2);
+				}
+			}
+			_this2.y = _y2;
+			if(!_this2._construct) {
+				if(_this2.listen_y != null && !_this2.ignore_listeners) {
+					_this2.listen_y(_y2);
+				}
+			}
+			_this2.z = _z1;
+			if(!_this2._construct) {
+				if(_this2.listen_z != null && !_this2.ignore_listeners) {
+					_this2.listen_z(_z1);
+				}
+			}
+			_this2.ignore_listeners = prev2;
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_this2.x);
+			}
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_this2.y);
+			}
+			if(_this2.listen_z != null && !_this2.ignore_listeners) {
+				_this2.listen_z(_this2.z);
+			}
+		}
+	}
+	,decelerate: function(dt) {
+		var _this = this.velocity;
+		var _this1 = this.velocity;
+		var value = Math.max(Math.sqrt(_this1.x * _this1.x + _this1.y * _this1.y + _this1.z * _this1.z) - this.max_move_speed / this.deceleration_time * dt,0);
+		var v = Math.sqrt(_this.x * _this.x + _this.y * _this.y + _this.z * _this.z);
+		if(v != 0) {
+			var _x = _this.x / v;
+			var _y = _this.y / v;
+			var _z = _this.z / v;
+			var prev = _this.ignore_listeners;
+			_this.ignore_listeners = true;
+			_this.x = _x;
+			if(!_this._construct) {
+				if(_this.listen_x != null && !_this.ignore_listeners) {
+					_this.listen_x(_x);
+				}
+			}
+			_this.y = _y;
+			if(!_this._construct) {
+				if(_this.listen_y != null && !_this.ignore_listeners) {
+					_this.listen_y(_y);
+				}
+			}
+			_this.z = _z;
+			if(!_this._construct) {
+				if(_this.listen_z != null && !_this.ignore_listeners) {
+					_this.listen_z(_z);
+				}
+			}
+			_this.ignore_listeners = prev;
+			if(_this.listen_x != null && !_this.ignore_listeners) {
+				_this.listen_x(_this.x);
+			}
+			if(_this.listen_y != null && !_this.ignore_listeners) {
+				_this.listen_y(_this.y);
+			}
+			if(_this.listen_z != null && !_this.ignore_listeners) {
+				_this.listen_z(_this.z);
+			}
+		} else {
+			var prev1 = _this.ignore_listeners;
+			_this.ignore_listeners = true;
+			_this.x = 0;
+			if(!_this._construct) {
+				if(_this.listen_x != null && !_this.ignore_listeners) {
+					_this.listen_x(0);
+				}
+			}
+			_this.y = 0;
+			if(!_this._construct) {
+				if(_this.listen_y != null && !_this.ignore_listeners) {
+					_this.listen_y(0);
+				}
+			}
+			_this.z = 0;
+			if(!_this._construct) {
+				if(_this.listen_z != null && !_this.ignore_listeners) {
+					_this.listen_z(0);
+				}
+			}
+			_this.ignore_listeners = prev1;
+			if(_this.listen_x != null && !_this.ignore_listeners) {
+				_this.listen_x(_this.x);
+			}
+			if(_this.listen_y != null && !_this.ignore_listeners) {
+				_this.listen_y(_this.y);
+			}
+			if(_this.listen_z != null && !_this.ignore_listeners) {
+				_this.listen_z(_this.z);
+			}
+		}
+		var _this2 = _this;
+		var _x1 = _this2.x * value;
+		var _y1 = _this2.y * value;
+		var _z1 = _this2.z * value;
+		var prev2 = _this2.ignore_listeners;
+		_this2.ignore_listeners = true;
+		_this2.x = _x1;
+		if(!_this2._construct) {
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_x1);
+			}
+		}
+		_this2.y = _y1;
+		if(!_this2._construct) {
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_y1);
+			}
+		}
+		_this2.z = _z1;
+		if(!_this2._construct) {
+			if(_this2.listen_z != null && !_this2.ignore_listeners) {
+				_this2.listen_z(_z1);
+			}
+		}
+		_this2.ignore_listeners = prev2;
+		if(_this2.listen_x != null && !_this2.ignore_listeners) {
+			_this2.listen_x(_this2.x);
+		}
+		if(_this2.listen_y != null && !_this2.ignore_listeners) {
+			_this2.listen_y(_this2.y);
+		}
+		if(_this2.listen_z != null && !_this2.ignore_listeners) {
+			_this2.listen_z(_this2.z);
+		}
+	}
+	,ondestroy: function() {
+		luxe_Component.prototype.ondestroy.call(this);
+	}
+	,onremoved: function() {
+		luxe_Component.prototype.onremoved.call(this);
+	}
+	,__class__: components_Movement
+});
+var components_MovementParticles = function() {
+	luxe_Component.call(this,{ name : "MovementParticles"});
+};
+$hxClasses["components.MovementParticles"] = components_MovementParticles;
+components_MovementParticles.__name__ = ["components","MovementParticles"];
+components_MovementParticles.__super__ = luxe_Component;
+components_MovementParticles.prototype = $extend(luxe_Component.prototype,{
+	init: function() {
+		this.sprite = this.get_entity();
+		this.particles = new luxe_ParticleSystem();
+		var options = { name : "dustParticles", emit_time : 0.5, emit_count : 5, direction : 0, direction_random : 0, speed : 0, speed_random : 0, end_speed : 0, life : 0.5, life_random : 0.15, rotation : 0, rotation_random : 25, end_rotation : 0, end_rotation_random : 20, rotation_offset : 0, pos_offset : new phoenix_Vector(0,0), pos_random : new phoenix_Vector(8,5), gravity : new phoenix_Vector(0,-90), start_size : new phoenix_Vector(10,10), start_size_random : new phoenix_Vector(0,0), end_size : new phoenix_Vector(0,0), end_size_random : new phoenix_Vector(0,0), start_color : new phoenix_ColorHSV(0,0,1,1), end_color : new phoenix_ColorHSV(0,0,0.5,1)};
+		this.particles.add_emitter(options);
+		this.emitter = this.particles._components.get("dustParticles",false);
+		this.emitter.init();
+		this.emitter.stop();
+		this.sprite.events.listen("movement.start",$bind(this,this.resume_particles));
+		this.sprite.events.listen("movement.stop",$bind(this,this.pause_particles));
+	}
+	,update: function(dt) {
+		var tmp = this.particles;
+		var _this = this.sprite.get_pos();
+		var _this1 = new phoenix_Vector(_this.x,_this.y,_this.z,_this.w);
+		var other = new phoenix_Vector(0,this.sprite.size.y / 2);
+		if(other == null) {
+			throw new js__$Boot_HaxeError(luxe_DebugError.null_assertion("other was null"));
+		}
+		var _x = _this1.x + other.x;
+		var _y = _this1.y + other.y;
+		var _z = _this1.z + other.z;
+		var prev = _this1.ignore_listeners;
+		_this1.ignore_listeners = true;
+		_this1.x = _x;
+		if(!_this1._construct) {
+			if(_this1.listen_x != null && !_this1.ignore_listeners) {
+				_this1.listen_x(_x);
+			}
+		}
+		_this1.y = _y;
+		if(!_this1._construct) {
+			if(_this1.listen_y != null && !_this1.ignore_listeners) {
+				_this1.listen_y(_y);
+			}
+		}
+		_this1.z = _z;
+		if(!_this1._construct) {
+			if(_this1.listen_z != null && !_this1.ignore_listeners) {
+				_this1.listen_z(_z);
+			}
+		}
+		_this1.ignore_listeners = prev;
+		if(_this1.listen_x != null && !_this1.ignore_listeners) {
+			_this1.listen_x(_this1.x);
+		}
+		if(_this1.listen_y != null && !_this1.ignore_listeners) {
+			_this1.listen_y(_this1.y);
+		}
+		if(_this1.listen_z != null && !_this1.ignore_listeners) {
+			_this1.listen_z(_this1.z);
+		}
+		tmp.set_pos(_this1);
+	}
+	,pause_particles: function(e) {
+		this.emitter.stop();
+	}
+	,resume_particles: function(e) {
+		this.emitter.start();
+	}
+	,ondestroy: function() {
+		luxe_Component.prototype.ondestroy.call(this);
+	}
+	,onremoved: function() {
+		luxe_Component.prototype.onremoved.call(this);
+	}
+	,__class__: components_MovementParticles
+});
+var components_PlayerController = function() {
+	luxe_Component.call(this,{ name : "PlayerController"});
+};
+$hxClasses["components.PlayerController"] = components_PlayerController;
+components_PlayerController.__name__ = ["components","PlayerController"];
+components_PlayerController.__super__ = luxe_Component;
+components_PlayerController.prototype = $extend(luxe_Component.prototype,{
+	init: function() {
+		this.movement_component = this.get_entity()._components.get("Movement",false);
+		this.direction = this.get_entity()._components.get("Movement",false).direction;
+	}
+	,update: function(dt) {
+		this.handle_input();
+	}
+	,handle_input: function() {
+		if(Luxe.input.inputpressed("left")) {
+			var _this = this.direction;
+			_this.x = -1;
+			if(!_this._construct) {
+				if(_this.listen_x != null && !_this.ignore_listeners) {
+					_this.listen_x(-1);
+				}
+			}
+		}
+		if(Luxe.input.inputreleased("left")) {
+			if(Luxe.input.inputdown("right")) {
+				var _this1 = this.direction;
+				_this1.x = 1;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(1);
+					}
+				}
+			} else {
+				var _this2 = this.direction;
+				_this2.x = 0;
+				if(!_this2._construct) {
+					if(_this2.listen_x != null && !_this2.ignore_listeners) {
+						_this2.listen_x(0);
+					}
+				}
+			}
+		}
+		if(Luxe.input.inputpressed("right")) {
+			var _this3 = this.direction;
+			_this3.x = 1;
+			if(!_this3._construct) {
+				if(_this3.listen_x != null && !_this3.ignore_listeners) {
+					_this3.listen_x(1);
+				}
+			}
+		}
+		if(Luxe.input.inputreleased("right")) {
+			if(Luxe.input.inputdown("left")) {
+				var _this4 = this.direction;
+				_this4.x = -1;
+				if(!_this4._construct) {
+					if(_this4.listen_x != null && !_this4.ignore_listeners) {
+						_this4.listen_x(-1);
+					}
+				}
+			} else {
+				var _this5 = this.direction;
+				_this5.x = 0;
+				if(!_this5._construct) {
+					if(_this5.listen_x != null && !_this5.ignore_listeners) {
+						_this5.listen_x(0);
+					}
+				}
+			}
+		}
+		if(Luxe.input.inputpressed("up")) {
+			var _this6 = this.direction;
+			_this6.y = -1;
+			if(!_this6._construct) {
+				if(_this6.listen_y != null && !_this6.ignore_listeners) {
+					_this6.listen_y(-1);
+				}
+			}
+		}
+		if(Luxe.input.inputreleased("up")) {
+			if(Luxe.input.inputdown("down")) {
+				var _this7 = this.direction;
+				_this7.y = 1;
+				if(!_this7._construct) {
+					if(_this7.listen_y != null && !_this7.ignore_listeners) {
+						_this7.listen_y(1);
+					}
+				}
+			} else {
+				var _this8 = this.direction;
+				_this8.y = 0;
+				if(!_this8._construct) {
+					if(_this8.listen_y != null && !_this8.ignore_listeners) {
+						_this8.listen_y(0);
+					}
+				}
+			}
+		}
+		if(Luxe.input.inputpressed("down")) {
+			var _this9 = this.direction;
+			_this9.y = 1;
+			if(!_this9._construct) {
+				if(_this9.listen_y != null && !_this9.ignore_listeners) {
+					_this9.listen_y(1);
+				}
+			}
+		}
+		if(Luxe.input.inputreleased("down")) {
+			if(Luxe.input.inputdown("up")) {
+				var _this10 = this.direction;
+				_this10.y = -1;
+				if(!_this10._construct) {
+					if(_this10.listen_y != null && !_this10.ignore_listeners) {
+						_this10.listen_y(-1);
+					}
+				}
+			} else {
+				var _this11 = this.direction;
+				_this11.y = 0;
+				if(!_this11._construct) {
+					if(_this11.listen_y != null && !_this11.ignore_listeners) {
+						_this11.listen_y(0);
+					}
+				}
+			}
+		}
+	}
+	,ondestroy: function() {
+		luxe_Component.prototype.ondestroy.call(this);
+	}
+	,onremoved: function() {
+		luxe_Component.prototype.onremoved.call(this);
+	}
+	,__class__: components_PlayerController
+});
 var luxe_Emitter = function() {
 	this._checking = false;
 	this._to_remove = new List();
@@ -2672,8 +3717,43 @@ luxe_Sprite.prototype = $extend(luxe_Visual.prototype,{
 	,__class__: luxe_Sprite
 	,__properties__: $extend(luxe_Visual.prototype.__properties__,{set_uv:"set_uv",set_flipy:"set_flipy",set_flipx:"set_flipx",set_centered:"set_centered"})
 });
+var entities_Enemy = function() {
+	luxe_Sprite.call(this,{ name : "Enemy", pos : new phoenix_Vector(100,100), color : new phoenix_Color().rgb(16711750), size : new phoenix_Vector(32,64)});
+};
+$hxClasses["entities.Enemy"] = entities_Enemy;
+entities_Enemy.__name__ = ["entities","Enemy"];
+entities_Enemy.__super__ = luxe_Sprite;
+entities_Enemy.prototype = $extend(luxe_Sprite.prototype,{
+	init: function() {
+		var _component = new components_Movement();
+		this.component_count++;
+		var movement = this._components.add(_component);
+		var _component1 = new components_EnemyController();
+		this.component_count++;
+		this._components.add(_component1);
+		var _component2 = new components_MovementParticles();
+		this.component_count++;
+		this._components.add(_component2);
+		movement.max_move_speed = 200;
+	}
+	,update: function(dt) {
+	}
+	,ondestroy: function() {
+		luxe_Sprite.prototype.ondestroy.call(this);
+	}
+	,__class__: entities_Enemy
+});
 var entities_Player = function() {
-	luxe_Sprite.call(this,{ name : "player", pos : Luxe.core.screen.get_mid(), color : new phoenix_Color().rgb(16337668), size : new phoenix_Vector(128,128)});
+	luxe_Sprite.call(this,{ name : "Player", pos : Luxe.core.screen.get_mid(), color : new phoenix_Color().rgb(65446), size : new phoenix_Vector(32,64)});
+	var _component = new components_Movement();
+	this.component_count++;
+	this._components.add(_component);
+	var _component1 = new components_PlayerController();
+	this.component_count++;
+	this._components.add(_component1);
+	var _component2 = new components_MovementParticles();
+	this.component_count++;
+	this._components.add(_component2);
 };
 $hxClasses["entities.Player"] = entities_Player;
 entities_Player.__name__ = ["entities","Player"];
@@ -5185,243 +6265,6 @@ luxe_Camera.prototype = $extend(luxe_Entity.prototype,{
 	}
 	,__class__: luxe_Camera
 	,__properties__: $extend(luxe_Entity.prototype.__properties__,{set_size_mode:"set_size_mode",get_size_mode:"get_size_mode",set_size:"set_size",get_size:"get_size",set_minimum_zoom:"set_minimum_zoom",get_minimum_zoom:"get_minimum_zoom",set_zoom:"set_zoom",get_zoom:"get_zoom",set_center:"set_center",get_center:"get_center",set_viewport:"set_viewport",get_viewport:"get_viewport"})
-});
-var luxe_ID = function(_name,_id) {
-	if(_id == null) {
-		_id = "";
-	}
-	if(_name == null) {
-		_name = "";
-	}
-	this.name = "";
-	this.name = _name;
-	this.id = _id == "" ? Luxe.utils.uniqueid() : _id;
-};
-$hxClasses["luxe.ID"] = luxe_ID;
-luxe_ID.__name__ = ["luxe","ID"];
-luxe_ID.prototype = {
-	__class__: luxe_ID
-};
-var luxe_Component = function(_options) {
-	var _name = "";
-	if(_options != null) {
-		if(_options.name != null) {
-			_name = _options.name;
-		}
-	}
-	luxe_ID.call(this,_name == "" ? Luxe.utils.uniqueid() : _name);
-};
-$hxClasses["luxe.Component"] = luxe_Component;
-luxe_Component.__name__ = ["luxe","Component"];
-luxe_Component.__super__ = luxe_ID;
-luxe_Component.prototype = $extend(luxe_ID.prototype,{
-	init: function() {
-	}
-	,update: function(dt) {
-	}
-	,onadded: function() {
-	}
-	,onremoved: function() {
-	}
-	,onfixedupdate: function(rate) {
-	}
-	,onreset: function() {
-	}
-	,ondestroy: function() {
-	}
-	,onkeyup: function(event) {
-	}
-	,onkeydown: function(event) {
-	}
-	,ontextinput: function(event) {
-	}
-	,oninputdown: function(event) {
-	}
-	,oninputup: function(event) {
-	}
-	,onmousedown: function(event) {
-	}
-	,onmouseup: function(event) {
-	}
-	,onmousemove: function(event) {
-	}
-	,onmousewheel: function(event) {
-	}
-	,ontouchdown: function(event) {
-	}
-	,ontouchup: function(event) {
-	}
-	,ontouchmove: function(event) {
-	}
-	,ongamepadup: function(event) {
-	}
-	,ongamepaddown: function(event) {
-	}
-	,ongamepadaxis: function(event) {
-	}
-	,ongamepaddevice: function(event) {
-	}
-	,onwindowmoved: function(event) {
-	}
-	,onwindowresized: function(event) {
-	}
-	,onwindowsized: function(event) {
-	}
-	,onwindowminimized: function(event) {
-	}
-	,onwindowrestored: function(event) {
-	}
-	,add: function(component) {
-		var _this = this.get_entity();
-		_this.component_count++;
-		return _this._components.add(component);
-	}
-	,remove: function(_name) {
-		var _this = this.get_entity();
-		_this.component_count--;
-		return _this._components.remove(_name);
-	}
-	,get: function(_name,in_children) {
-		if(in_children == null) {
-			in_children = false;
-		}
-		return this.get_entity()._components.get(_name,in_children);
-	}
-	,get_any: function(_name,in_children,first_only) {
-		if(first_only == null) {
-			first_only = true;
-		}
-		if(in_children == null) {
-			in_children = false;
-		}
-		return this.get_entity()._components.get_any(_name,in_children,first_only);
-	}
-	,has: function(_name) {
-		return this.get_entity()._components.has(_name);
-	}
-	,_detach_entity: function() {
-		var tmp = this.get_entity() != null;
-	}
-	,_attach_entity: function() {
-		var tmp = this.get_entity() != null;
-	}
-	,set_entity: function(_entity) {
-		this._detach_entity();
-		this.entity = _entity;
-		this._attach_entity();
-		return this.get_entity();
-	}
-	,get_entity: function() {
-		return this.entity;
-	}
-	,set_pos: function(_p) {
-		var _this = this.get_entity().get_transform().local;
-		_this.pos = _p;
-		if(_p != null) {
-			var _v = _this.pos;
-			var listener = $bind(_this,_this._pos_change);
-			_v.listen_x = listener;
-			_v.listen_y = listener;
-			_v.listen_z = listener;
-			if(_this.pos_changed != null && !_this.ignore_listeners) {
-				_this.pos_changed(_this.pos);
-			}
-		}
-		return _this.pos;
-	}
-	,get_pos: function() {
-		return this.get_entity().get_transform().local.pos;
-	}
-	,set_rotation: function(_r) {
-		var _this = this.get_entity().get_transform().local;
-		_this.rotation = _r;
-		if(_r != null) {
-			var _q = _this.rotation;
-			var listener = $bind(_this,_this._rotation_change);
-			_q.listen_x = listener;
-			_q.listen_y = listener;
-			_q.listen_z = listener;
-			_q.listen_w = listener;
-			if(_this.rotation_changed != null && !_this.ignore_listeners) {
-				_this.rotation_changed(_this.rotation);
-			}
-		}
-		return _this.rotation;
-	}
-	,get_rotation: function() {
-		return this.get_entity().get_transform().local.rotation;
-	}
-	,set_scale: function(_s) {
-		var _this = this.get_entity().get_transform().local;
-		_this.scale = _s;
-		if(_s != null) {
-			var _v = _this.scale;
-			var listener = $bind(_this,_this._scale_change);
-			_v.listen_x = listener;
-			_v.listen_y = listener;
-			_v.listen_z = listener;
-			if(_this.scale_changed != null && !_this.ignore_listeners) {
-				_this.scale_changed(_this.scale);
-			}
-		}
-		return _this.scale;
-	}
-	,get_scale: function() {
-		return this.get_entity().get_transform().local.scale;
-	}
-	,set_origin: function(_o) {
-		var _this = this.get_entity().get_transform();
-		_this.dirty = true;
-		if(_this.dirty && !_this._setup && _this._dirty_handlers != null && _this._dirty_handlers.length > 0) {
-			var _g = 0;
-			var _g1 = _this._dirty_handlers;
-			while(_g < _g1.length) {
-				var _handler = _g1[_g];
-				++_g;
-				if(_handler != null) {
-					_handler(_this);
-				}
-			}
-		}
-		_this.origin = _o;
-		if(_this._origin_handlers != null && _this._origin_handlers.length > 0) {
-			var _origin = _this.origin;
-			var _g2 = 0;
-			var _g11 = _this._origin_handlers;
-			while(_g2 < _g11.length) {
-				var _handler1 = _g11[_g2];
-				++_g2;
-				if(_handler1 != null) {
-					_handler1(_origin);
-				}
-			}
-		}
-		return _this.origin;
-	}
-	,get_origin: function() {
-		return this.get_entity().get_transform().origin;
-	}
-	,set_transform: function(_o) {
-		return this.get_entity().set_transform(_o);
-	}
-	,get_transform: function() {
-		return this.get_entity().get_transform();
-	}
-	,entity_pos_change: function(_pos) {
-	}
-	,entity_scale_change: function(_scale) {
-	}
-	,entity_rotation_change: function(_rotation) {
-	}
-	,entity_origin_change: function(_origin) {
-	}
-	,entity_parent_change: function(_parent) {
-	}
-	,toString: function() {
-		return "luxe Component: " + this.name + " on " + this.get_entity().get_name() + " / id: " + this.id;
-	}
-	,__class__: luxe_Component
-	,__properties__: {set_origin:"set_origin",get_origin:"get_origin",set_scale:"set_scale",get_scale:"get_scale",set_rotation:"set_rotation",get_rotation:"get_rotation",set_pos:"set_pos",get_pos:"get_pos",set_entity:"set_entity",get_entity:"get_entity"}
 });
 var luxe_Debug = function(_app) {
 	this.last_cursor_grab = false;
@@ -8907,6 +9750,871 @@ luxe_Parcel.prototype = {
 	}
 	,__class__: luxe_Parcel
 	,__properties__: {get_length:"get_length",get_listed:"get_listed"}
+};
+var luxe_ParticleSystem = function(_options) {
+	this.enabled = true;
+	this.paused = false;
+	luxe_Entity.call(this,_options);
+};
+$hxClasses["luxe.ParticleSystem"] = luxe_ParticleSystem;
+luxe_ParticleSystem.__name__ = ["luxe","ParticleSystem"];
+luxe_ParticleSystem.__super__ = luxe_Entity;
+luxe_ParticleSystem.prototype = $extend(luxe_Entity.prototype,{
+	init: function() {
+		if(this.emitters == null) {
+			this.emitters = new haxe_ds_StringMap();
+		}
+	}
+	,add_emitter: function(_template) {
+		if(this.emitters == null) {
+			this.emitters = new haxe_ds_StringMap();
+		}
+		var _name = "";
+		if(_template.name != null) {
+			_name = _template.name;
+		} else {
+			_name = Luxe.utils.uniqueid();
+		}
+		var _component = new luxe_ParticleEmitter({ name : _name, system : this, template : _template});
+		this.component_count++;
+		var _emitter = this._components.add(_component);
+		var _this = this.emitters;
+		if(__map_reserved[_name] != null) {
+			_this.setReserved(_name,_emitter);
+		} else {
+			_this.h[_name] = _emitter;
+		}
+	}
+	,start: function(duration) {
+		if(duration == null) {
+			duration = -1;
+		}
+		this.enabled = true;
+		var _this = this.emitters;
+		var emitter = new haxe_ds__$StringMap_StringMapIterator(_this,_this.arrayKeys());
+		while(emitter.hasNext()) {
+			var emitter1 = emitter.next();
+			emitter1.start(duration);
+		}
+		var emitter2 = this.emitters.iterator();
+		while(emitter2.hasNext()) {
+			var emitter3 = emitter2.next();
+			emitter3.paused = false;
+		}
+		this.paused = false;
+	}
+	,stop: function() {
+		this.enabled = false;
+		var _this = this.emitters;
+		var emitter = new haxe_ds__$StringMap_StringMapIterator(_this,_this.arrayKeys());
+		while(emitter.hasNext()) {
+			var emitter1 = emitter.next();
+			emitter1.stop();
+		}
+	}
+	,kill: function() {
+		this.enabled = false;
+		var _this = this.emitters;
+		var emitter = new haxe_ds__$StringMap_StringMapIterator(_this,_this.arrayKeys());
+		while(emitter.hasNext()) {
+			var emitter1 = emitter.next();
+			emitter1.kill();
+		}
+	}
+	,set_paused: function(_paused) {
+		var _this = this.emitters;
+		var emitter = new haxe_ds__$StringMap_StringMapIterator(_this,_this.arrayKeys());
+		while(emitter.hasNext()) {
+			var emitter1 = emitter.next();
+			emitter1.paused = _paused;
+		}
+		return this.paused = _paused;
+	}
+	,ondestroy: function() {
+		luxe_Entity.prototype.ondestroy.call(this);
+	}
+	,__class__: luxe_ParticleSystem
+	,__properties__: $extend(luxe_Entity.prototype.__properties__,{set_paused:"set_paused"})
+});
+var luxe_ParticleEmitter = function(_data) {
+	this.has_end_rotation = false;
+	this.finish_time = 0;
+	this.emit_timer = 0;
+	this.radius_random = 50;
+	this.radius = 50;
+	this.zrotation = 0;
+	this.particle_image = null;
+	this.cache_index = 0;
+	this.cache_wrap = true;
+	this.cache_size = 100;
+	this.particle_index = 0;
+	this.emit_last = 0;
+	this.emit_next = 0;
+	this.duration = -1;
+	this.elapsed_time = 0;
+	this.emit_count = 1;
+	this.paused = false;
+	this.enabled = true;
+	luxe_Component.call(this,{ name : _data.name});
+	this.system = _data.system;
+	this.template = _data.template;
+};
+$hxClasses["luxe.ParticleEmitter"] = luxe_ParticleEmitter;
+luxe_ParticleEmitter.__name__ = ["luxe","ParticleEmitter"];
+luxe_ParticleEmitter.__super__ = luxe_Component;
+luxe_ParticleEmitter.prototype = $extend(luxe_Component.prototype,{
+	init: function() {
+		this.active_particles = [];
+		this.particle_cache = [];
+		this.dead_pool = [];
+		this.emit_timer = 0;
+		this.emit_last = 0;
+		this.emit_next = 0;
+		this._temp_speed = new phoenix_Vector();
+		this._to_remove = [];
+		if(this.template.batcher == null) {
+			this.template.batcher = Luxe.renderer.batcher;
+		}
+		this.apply(this.template);
+	}
+	,apply: function(_template) {
+		if(_template == null) {
+			_template = { };
+		}
+		if(_template.particle_image != null) {
+			this.particle_image = _template.particle_image;
+		} else {
+			this.particle_image = null;
+		}
+		if(_template.emit_time != null) {
+			this.emit_time = _template.emit_time;
+		} else {
+			this.emit_time = 0.1;
+		}
+		if(_template.cache_size != null) {
+			this.cache_size = _template.cache_size;
+		} else {
+			this.cache_size = 100;
+		}
+		if(_template.cache_wrap != null) {
+			this.cache_wrap = _template.cache_wrap;
+		} else {
+			this.cache_wrap = true;
+		}
+		if(_template.emit_count != null) {
+			this.emit_count = _template.emit_count;
+		} else {
+			this.emit_count = 1;
+		}
+		if(_template.direction != null) {
+			this.direction = _template.direction;
+		} else {
+			this.direction = 0;
+		}
+		if(_template.direction_random != null) {
+			this.direction_random = _template.direction_random;
+		} else {
+			this.direction_random = 0;
+		}
+		if(_template.speed != null) {
+			this.speed = _template.speed;
+		} else {
+			this.speed = 0;
+		}
+		if(_template.speed_random != null) {
+			this.speed_random = _template.speed_random;
+		} else {
+			this.speed_random = 0;
+		}
+		if(_template.end_speed != null) {
+			this.end_speed = _template.end_speed;
+		} else {
+			this.end_speed = 0;
+		}
+		if(_template.life != null) {
+			this.life = _template.life;
+		} else {
+			this.life = 1;
+		}
+		if(_template.life_random != null) {
+			this.life_random = _template.life_random;
+		} else {
+			this.life_random = 0;
+		}
+		if(_template.rotation != null) {
+			this.zrotation = _template.rotation;
+		} else {
+			this.zrotation = 0;
+		}
+		if(_template.rotation_random != null) {
+			this.rotation_random = _template.rotation_random;
+		} else {
+			this.rotation_random = 0;
+		}
+		if(_template.end_rotation != null) {
+			this.end_rotation = _template.end_rotation;
+			this.has_end_rotation = true;
+		} else {
+			this.end_rotation = 0;
+		}
+		if(_template.end_rotation_random != null) {
+			this.end_rotation_random = _template.end_rotation_random;
+		} else {
+			this.end_rotation_random = 0;
+		}
+		if(_template.rotation_offset != null) {
+			this.rotation_offset = _template.rotation_offset;
+		} else {
+			this.rotation_offset = 0;
+		}
+		if(_template.direction_vector != null) {
+			this.direction_vector = _template.direction_vector;
+		} else {
+			this.direction_vector = new phoenix_Vector();
+		}
+		if(_template.pos != null) {
+			this._position = _template.pos;
+		} else {
+			this._position = new phoenix_Vector();
+		}
+		if(_template.pos_offset != null) {
+			this.pos_offset = _template.pos_offset;
+		} else {
+			this.pos_offset = new phoenix_Vector();
+		}
+		if(_template.pos_random != null) {
+			this.pos_random = _template.pos_random;
+		} else {
+			this.pos_random = new phoenix_Vector(10,0);
+		}
+		if(_template.gravity != null) {
+			this.gravity = _template.gravity;
+		} else {
+			this.gravity = new phoenix_Vector(0,-8);
+		}
+		if(_template.start_size != null) {
+			this.start_size = _template.start_size;
+		} else {
+			this.start_size = new phoenix_Vector(48,48);
+		}
+		if(_template.start_size_random != null) {
+			this.start_size_random = _template.start_size_random;
+		} else {
+			this.start_size_random = new phoenix_Vector(5,5);
+		}
+		if(_template.end_size != null) {
+			this.end_size = _template.end_size;
+		} else {
+			this.end_size = new phoenix_Vector(64,64);
+		}
+		if(_template.end_size_random != null) {
+			this.end_size_random = _template.end_size_random;
+		} else {
+			this.end_size_random = new phoenix_Vector();
+		}
+		if(_template.start_color != null) {
+			this.start_color = _template.start_color;
+		} else {
+			this.start_color = new phoenix_Color().rgb(16747008);
+		}
+		if(_template.start_color_random != null) {
+			this.start_color_random = _template.start_color_random;
+		} else {
+			this.start_color_random = new phoenix_Color(0,0,0,0);
+		}
+		if(_template.end_color != null) {
+			this.end_color = _template.end_color;
+		} else {
+			this.end_color = new phoenix_Color(0,0,0,0);
+		}
+		if(_template.end_color_random != null) {
+			this.end_color_random = _template.end_color_random;
+		} else {
+			this.end_color_random = new phoenix_Color(0,0,0,0);
+		}
+		var _to_cache = this.cache_size;
+		if(this.particle_cache.length > _to_cache) {
+			_to_cache = 0;
+			var _g1 = 0;
+			var _g = this.particle_cache.length - _to_cache;
+			while(_g1 < _g) {
+				var i = _g1++;
+				this.particle_cache.pop().destroy();
+			}
+		} else if(this.particle_cache.length <= _to_cache) {
+			_to_cache -= this.particle_cache.length;
+		}
+		var _exist = this.particle_cache.length;
+		if(_to_cache > 0) {
+			var _g11 = 0;
+			var _g2 = _to_cache;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				this.cache(_exist + i1);
+			}
+		}
+	}
+	,cache: function(index) {
+		var _particle = new luxe_Particle(this,index);
+		_particle.sprite = new luxe_Sprite({ name : this.name + "_particle_" + index, depth : this.template.depth, texture : this.particle_image, no_scene : true, no_batcher_add : true, pos : new phoenix_Vector()});
+		this.particle_cache[index] = _particle;
+		this.dead_pool.push(index);
+	}
+	,check_cache: function() {
+		var _to_cache = this.cache_size;
+		if(this.particle_cache.length > _to_cache) {
+			_to_cache = 0;
+			var _g1 = 0;
+			var _g = this.particle_cache.length - _to_cache;
+			while(_g1 < _g) {
+				var i = _g1++;
+				this.particle_cache.pop().destroy();
+			}
+		} else if(this.particle_cache.length <= _to_cache) {
+			_to_cache -= this.particle_cache.length;
+		}
+		var _exist = this.particle_cache.length;
+		if(_to_cache > 0) {
+			var _g11 = 0;
+			var _g2 = _to_cache;
+			while(_g11 < _g2) {
+				var i1 = _g11++;
+				this.cache(_exist + i1);
+			}
+		}
+	}
+	,start: function(_duration) {
+		if(_duration == null) {
+			_duration = -1;
+		}
+		this.duration = _duration;
+		this.enabled = true;
+		this.paused = false;
+		this.emit_last = 0;
+		this.emit_timer = 0;
+		this.emit_next = 0;
+		if(this.duration >= 0) {
+			var _this = Luxe.core.app;
+			this.finish_time = window.performance.now() / 1000.0 - snow_core_web_Runtime.timestamp_start + this.duration;
+		}
+	}
+	,stop: function() {
+		this.enabled = false;
+		this.elapsed_time = 0;
+		this.emit_timer = 0;
+	}
+	,kill: function() {
+		this.stop();
+		var _g = 0;
+		var _g1 = this.active_particles;
+		while(_g < _g1.length) {
+			var p = _g1[_g];
+			++_g;
+			this.unspawn(p,false);
+		}
+		this.active_particles = null;
+		this.active_particles = [];
+	}
+	,ondestroy: function() {
+		this.active_particles = null;
+		if(this.particle_cache != null) {
+			while(this.particle_cache.length > 0) {
+				var _p = this.particle_cache.pop();
+				_p.destroy();
+				_p = null;
+			}
+		}
+		this.particle_cache = null;
+	}
+	,unspawn: function(particle,_remove_from_active) {
+		if(_remove_from_active == null) {
+			_remove_from_active = true;
+		}
+		if(_remove_from_active) {
+			HxOverrides.remove(this.active_particles,particle);
+		}
+		this.dead_pool.push(particle.index);
+		if(particle.sprite.geometry != null) {
+			this.template.batcher.remove(particle.sprite.geometry);
+		}
+	}
+	,spawn: function() {
+		var _max_alive = this.active_particles.length >= this.cache_size;
+		if(_max_alive) {
+			if(this.cache_wrap) {
+				this.unspawn(this.active_particles[0]);
+			} else {
+				return;
+			}
+		}
+		if(this.dead_pool.length == 0) {
+			throw new js__$Boot_HaxeError("huh, no particles in the dead_pool?!");
+		}
+		var _spawn_index = this.dead_pool.shift();
+		var _particle = this.particle_cache[_spawn_index];
+		this.reset_particle(_particle);
+		this.active_particles.push(_particle);
+		if(_particle.sprite.geometry != null) {
+			this.template.batcher.add(_particle.sprite.geometry);
+		}
+	}
+	,reset_particle: function(particle) {
+		particle.time_to_live = this.life + this.life_random * (Math.random() * 2 - 1);
+		var _this = particle.pos;
+		var _x = this.system.get_pos().x + this.pos_random.x * (Math.random() * 2 - 1) + this.pos_offset.x;
+		_this.x = _x;
+		if(!_this._construct) {
+			if(_this.listen_x != null && !_this.ignore_listeners) {
+				_this.listen_x(_x);
+			}
+		}
+		var _this1 = particle.pos;
+		var _y = this.system.get_pos().y + this.pos_random.y * (Math.random() * 2 - 1) + this.pos_offset.y;
+		_this1.y = _y;
+		if(!_this1._construct) {
+			if(_this1.listen_y != null && !_this1.ignore_listeners) {
+				_this1.listen_y(_y);
+			}
+		}
+		particle.rotation = this.zrotation + this.rotation_random * (Math.random() * 2 - 1) + this.rotation_offset;
+		var _new_dir = (this.direction + this.direction_random * (Math.random() * 2 - 1)) * (Math.PI / 180);
+		var _this2 = this.direction_vector;
+		var _x1 = Math.cos(_new_dir);
+		var _y1 = Math.sin(_new_dir);
+		var prev = _this2.ignore_listeners;
+		_this2.ignore_listeners = true;
+		_this2.x = _x1;
+		if(!_this2._construct) {
+			if(_this2.listen_x != null && !_this2.ignore_listeners) {
+				_this2.listen_x(_x1);
+			}
+		}
+		_this2.y = _y1;
+		if(!_this2._construct) {
+			if(_this2.listen_y != null && !_this2.ignore_listeners) {
+				_this2.listen_y(_y1);
+			}
+		}
+		_this2.ignore_listeners = prev;
+		if(_this2.listen_x != null && !_this2.ignore_listeners) {
+			_this2.listen_x(_this2.x);
+		}
+		if(_this2.listen_y != null && !_this2.ignore_listeners) {
+			_this2.listen_y(_this2.y);
+		}
+		var _point_speed = this.speed + this.speed_random * (Math.random() * 2 - 1);
+		var _this3 = particle.speed;
+		var prev1 = _this3.ignore_listeners;
+		_this3.ignore_listeners = true;
+		_this3.x = _point_speed;
+		if(!_this3._construct) {
+			if(_this3.listen_x != null && !_this3.ignore_listeners) {
+				_this3.listen_x(_point_speed);
+			}
+		}
+		_this3.y = _point_speed;
+		if(!_this3._construct) {
+			if(_this3.listen_y != null && !_this3.ignore_listeners) {
+				_this3.listen_y(_point_speed);
+			}
+		}
+		_this3.ignore_listeners = prev1;
+		if(_this3.listen_x != null && !_this3.ignore_listeners) {
+			_this3.listen_x(_this3.x);
+		}
+		if(_this3.listen_y != null && !_this3.ignore_listeners) {
+			_this3.listen_y(_this3.y);
+		}
+		var _this4 = particle.direction;
+		var _x2 = this.direction_vector.x;
+		_this4.x = _x2;
+		if(!_this4._construct) {
+			if(_this4.listen_x != null && !_this4.ignore_listeners) {
+				_this4.listen_x(_x2);
+			}
+		}
+		var _this5 = particle.direction;
+		var _y2 = this.direction_vector.y;
+		_this5.y = _y2;
+		if(!_this5._construct) {
+			if(_this5.listen_y != null && !_this5.ignore_listeners) {
+				_this5.listen_y(_y2);
+			}
+		}
+		var _this6 = particle.start_size;
+		var _x3 = this.start_size.x + this.start_size_random.x * (Math.random() * 2 - 1);
+		_this6.x = _x3;
+		if(!_this6._construct) {
+			if(_this6.listen_x != null && !_this6.ignore_listeners) {
+				_this6.listen_x(_x3);
+			}
+		}
+		var _this7 = particle.start_size;
+		var _y3 = this.start_size.y + this.start_size_random.y * (Math.random() * 2 - 1);
+		_this7.y = _y3;
+		if(!_this7._construct) {
+			if(_this7.listen_y != null && !_this7.ignore_listeners) {
+				_this7.listen_y(_y3);
+			}
+		}
+		var _this8 = particle.end_size;
+		var _x4 = this.end_size.x + this.end_size_random.x * (Math.random() * 2 - 1);
+		_this8.x = _x4;
+		if(!_this8._construct) {
+			if(_this8.listen_x != null && !_this8.ignore_listeners) {
+				_this8.listen_x(_x4);
+			}
+		}
+		var _this9 = particle.end_size;
+		var _y4 = this.end_size.y + this.end_size_random.y * (Math.random() * 2 - 1);
+		_this9.y = _y4;
+		if(!_this9._construct) {
+			if(_this9.listen_y != null && !_this9.ignore_listeners) {
+				_this9.listen_y(_y4);
+			}
+		}
+		var _this10 = particle.size;
+		var _x5 = particle.start_size.x < 0 ? 0 : Math.floor(particle.start_size.x);
+		_this10.x = _x5;
+		if(!_this10._construct) {
+			if(_this10.listen_x != null && !_this10.ignore_listeners) {
+				_this10.listen_x(_x5);
+			}
+		}
+		var _this11 = particle.size;
+		var _y5 = particle.start_size.y < 0 ? 0 : Math.floor(particle.start_size.y);
+		_this11.y = _y5;
+		if(!_this11._construct) {
+			if(_this11.listen_y != null && !_this11.ignore_listeners) {
+				_this11.listen_y(_y5);
+			}
+		}
+		particle.speed_delta = this.end_speed - _point_speed;
+		if(particle.speed_delta != 0) {
+			particle.speed_delta /= particle.time_to_live;
+		}
+		var _this12 = particle.size_delta;
+		var _x6 = (this.end_size.x - this.start_size.x) / particle.time_to_live;
+		_this12.x = _x6;
+		if(!_this12._construct) {
+			if(_this12.listen_x != null && !_this12.ignore_listeners) {
+				_this12.listen_x(_x6);
+			}
+		}
+		var _this13 = particle.size_delta;
+		var _y6 = (this.end_size.y - this.start_size.y) / particle.time_to_live;
+		_this13.y = _y6;
+		if(!_this13._construct) {
+			if(_this13.listen_y != null && !_this13.ignore_listeners) {
+				_this13.listen_y(_y6);
+			}
+		}
+		var _start_color = particle.color.set(this.start_color.r + this.start_color_random.r * (Math.random() * 2 - 1),this.start_color.g + this.start_color_random.g * (Math.random() * 2 - 1),this.start_color.b + this.start_color_random.b * (Math.random() * 2 - 1),this.start_color.a + this.start_color_random.a * (Math.random() * 2 - 1));
+		var _end_color = particle.end_color.set(this.end_color.r + this.end_color_random.r * (Math.random() * 2 - 1),this.end_color.g + this.end_color_random.g * (Math.random() * 2 - 1),this.end_color.b + this.end_color_random.b * (Math.random() * 2 - 1),this.end_color.a + this.end_color_random.a * (Math.random() * 2 - 1));
+		particle.color_delta.set_r((_end_color.r - _start_color.r) / particle.time_to_live);
+		particle.color_delta.set_g((_end_color.g - _start_color.g) / particle.time_to_live);
+		particle.color_delta.set_b((_end_color.b - _start_color.b) / particle.time_to_live);
+		particle.color_delta.a = (_end_color.a - _start_color.a) / particle.time_to_live;
+		if(this.has_end_rotation) {
+			var _end_rotation = this.end_rotation + this.end_rotation_random * (Math.random() * 2 - 1);
+			particle.rotation_delta = (_end_rotation - particle.rotation) / particle.time_to_live;
+		}
+		var _this14 = particle.sprite.size;
+		var _x7 = particle.start_size.x;
+		var _y7 = particle.start_size.y;
+		var prev2 = _this14.ignore_listeners;
+		_this14.ignore_listeners = true;
+		_this14.x = _x7;
+		if(!_this14._construct) {
+			if(_this14.listen_x != null && !_this14.ignore_listeners) {
+				_this14.listen_x(_x7);
+			}
+		}
+		_this14.y = _y7;
+		if(!_this14._construct) {
+			if(_this14.listen_y != null && !_this14.ignore_listeners) {
+				_this14.listen_y(_y7);
+			}
+		}
+		_this14.ignore_listeners = prev2;
+		if(_this14.listen_x != null && !_this14.ignore_listeners) {
+			_this14.listen_x(_this14.x);
+		}
+		if(_this14.listen_y != null && !_this14.ignore_listeners) {
+			_this14.listen_y(_this14.y);
+		}
+		particle.sprite.set_color(particle.color);
+		var _this15 = particle.sprite.get_pos();
+		var _other = particle.pos;
+		var _x8 = _other.x;
+		var _y8 = _other.y;
+		var _z = _other.z;
+		var _w = _other.w;
+		var prev3 = _this15.ignore_listeners;
+		_this15.ignore_listeners = true;
+		_this15.x = _x8;
+		if(!_this15._construct) {
+			if(_this15.listen_x != null && !_this15.ignore_listeners) {
+				_this15.listen_x(_x8);
+			}
+		}
+		_this15.y = _y8;
+		if(!_this15._construct) {
+			if(_this15.listen_y != null && !_this15.ignore_listeners) {
+				_this15.listen_y(_y8);
+			}
+		}
+		_this15.z = _z;
+		if(!_this15._construct) {
+			if(_this15.listen_z != null && !_this15.ignore_listeners) {
+				_this15.listen_z(_z);
+			}
+		}
+		_this15.w = _w;
+		_this15.ignore_listeners = prev3;
+		if(_this15.listen_x != null && !_this15.ignore_listeners) {
+			_this15.listen_x(_this15.x);
+		}
+		if(_this15.listen_y != null && !_this15.ignore_listeners) {
+			_this15.listen_y(_this15.y);
+		}
+		if(_this15.listen_z != null && !_this15.ignore_listeners) {
+			_this15.listen_z(_this15.z);
+		}
+		particle.sprite.set_rotation_z(particle.rotation);
+	}
+	,update: function(dt) {
+		if(this.paused) {
+			return;
+		}
+		if(this.enabled) {
+			var _this = Luxe.core.app;
+			this.emit_timer = window.performance.now() / 1000.0 - snow_core_web_Runtime.timestamp_start;
+			if(this.emit_timer > this.emit_next) {
+				this.emit_next = this.emit_timer + this.emit_time;
+				this.emit_last = this.emit_timer;
+				var _g1 = 0;
+				var _g = this.emit_count;
+				while(_g1 < _g) {
+					var i = _g1++;
+					this.spawn();
+				}
+			}
+			if(this.duration >= 0 && this.emit_timer > this.finish_time) {
+				this.stop();
+			}
+		}
+		var _gravity_x = this.gravity.x;
+		var _gravity_y = this.gravity.y;
+		var _g2 = 0;
+		var _g11 = this.active_particles;
+		while(_g2 < _g11.length) {
+			var p = _g11[_g2];
+			++_g2;
+			p.time_to_live -= dt;
+			if(p.time_to_live > 0) {
+				var _g21 = p.speed;
+				var _x = _g21.x + p.speed_delta * dt;
+				_g21.x = _x;
+				if(!_g21._construct) {
+					if(_g21.listen_x != null && !_g21.ignore_listeners) {
+						_g21.listen_x(_x);
+					}
+				}
+				var _g22 = p.speed;
+				var _y = _g22.y + p.speed_delta * dt;
+				_g22.y = _y;
+				if(!_g22._construct) {
+					if(_g22.listen_y != null && !_g22.ignore_listeners) {
+						_g22.listen_y(_y);
+					}
+				}
+				var _this1 = p.move_dir;
+				var _x1 = _gravity_x + p.direction.x * p.speed.x;
+				_this1.x = _x1;
+				if(!_this1._construct) {
+					if(_this1.listen_x != null && !_this1.ignore_listeners) {
+						_this1.listen_x(_x1);
+					}
+				}
+				var _this2 = p.move_dir;
+				var _y1 = _gravity_y + p.direction.y * p.speed.y;
+				_this2.y = _y1;
+				if(!_this2._construct) {
+					if(_this2.listen_y != null && !_this2.ignore_listeners) {
+						_this2.listen_y(_y1);
+					}
+				}
+				var _g23 = p.pos;
+				var _x2 = _g23.x + p.move_dir.x * dt;
+				_g23.x = _x2;
+				if(!_g23._construct) {
+					if(_g23.listen_x != null && !_g23.ignore_listeners) {
+						_g23.listen_x(_x2);
+					}
+				}
+				var _g24 = p.pos;
+				var _y2 = _g24.y + p.move_dir.y * dt;
+				_g24.y = _y2;
+				if(!_g24._construct) {
+					if(_g24.listen_y != null && !_g24.ignore_listeners) {
+						_g24.listen_y(_y2);
+					}
+				}
+				var _g25 = p.color;
+				var _r = _g25.set_r(_g25.r + p.color_delta.r * dt);
+				var _g26 = p.color;
+				var _g3 = _g26.set_g(_g26.g + p.color_delta.g * dt);
+				var _g27 = p.color;
+				var _b = _g27.set_b(_g27.b + p.color_delta.b * dt);
+				var p1 = p.color;
+				var _a = p1.a += p.color_delta.a * dt;
+				var _g28 = p.size;
+				var _x3 = _g28.x + p.size_delta.x * dt;
+				_g28.x = _x3;
+				var _xx;
+				if(_g28._construct) {
+					_xx = _g28.x;
+				} else {
+					if(_g28.listen_x != null && !_g28.ignore_listeners) {
+						_g28.listen_x(_x3);
+					}
+					_xx = _g28.x;
+				}
+				var _g29 = p.size;
+				var _y3 = _g29.y + p.size_delta.y * dt;
+				_g29.y = _y3;
+				var _yy;
+				if(_g29._construct) {
+					_yy = _g29.y;
+				} else {
+					if(_g29.listen_y != null && !_g29.ignore_listeners) {
+						_g29.listen_y(_y3);
+					}
+					_yy = _g29.y;
+				}
+				if(_r < 0) {
+					_r = 0;
+				} else if(_r > 1) {
+					_r = 1;
+				} else {
+					_r = _r;
+				}
+				if(_g3 < 0) {
+					_g3 = 0;
+				} else if(_g3 > 1) {
+					_g3 = 1;
+				} else {
+					_g3 = _g3;
+				}
+				if(_b < 0) {
+					_b = 0;
+				} else if(_b > 1) {
+					_b = 1;
+				} else {
+					_b = _b;
+				}
+				if(_a < 0) {
+					_a = 0;
+				} else if(_a > 1) {
+					_a = 1;
+				} else {
+					_a = _a;
+				}
+				p.draw_color.set(_r,_g3,_b,_a);
+				var _this3 = p.draw_size;
+				var prev = _this3.ignore_listeners;
+				_this3.ignore_listeners = true;
+				_this3.x = _xx;
+				if(!_this3._construct) {
+					if(_this3.listen_x != null && !_this3.ignore_listeners) {
+						_this3.listen_x(_xx);
+					}
+				}
+				_this3.y = _yy;
+				if(!_this3._construct) {
+					if(_this3.listen_y != null && !_this3.ignore_listeners) {
+						_this3.listen_y(_yy);
+					}
+				}
+				_this3.ignore_listeners = prev;
+				if(_this3.listen_x != null && !_this3.ignore_listeners) {
+					_this3.listen_x(_this3.x);
+				}
+				if(_this3.listen_y != null && !_this3.ignore_listeners) {
+					_this3.listen_y(_this3.y);
+				}
+			} else {
+				this._to_remove.push(p);
+			}
+			p.sprite.set_pos(p.pos);
+			p.sprite.set_size(p.draw_size);
+			p.sprite.set_rotation_z(p.rotation);
+			p.sprite.set_color(p.draw_color);
+		}
+		var _g4 = 0;
+		var _g12 = this._to_remove;
+		while(_g4 < _g12.length) {
+			var _particle = _g12[_g4];
+			++_g4;
+			this.unspawn(_particle);
+		}
+		this._to_remove = null;
+		this._to_remove = [];
+	}
+	,random_1_to_1: function() {
+		return Math.random() * 2 - 1;
+	}
+	,onremoved: function() {
+		luxe_Component.prototype.onremoved.call(this);
+	}
+	,__class__: luxe_ParticleEmitter
+});
+var luxe_Particle = function(e,_index) {
+	this.rotation_delta = 0;
+	this.rotation = 0;
+	this.time_to_live = 0;
+	this.index = _index;
+	this.particle_emitter = e;
+	this.system = e.system;
+	this.direction = new phoenix_Vector();
+	this.move_dir = new phoenix_Vector();
+	this.speed = new phoenix_Vector();
+	this.speed_delta = 0.0;
+	this.size = new phoenix_Vector();
+	this.pos = new phoenix_Vector();
+	this.start_size = new phoenix_Vector();
+	this.end_size = new phoenix_Vector();
+	this.size_delta = new phoenix_Vector();
+	this.color_delta = new phoenix_Color(0,0,0,0);
+	this.color = new phoenix_Color();
+	this.end_color = new phoenix_Color();
+	this.draw_color = new phoenix_Color();
+	this.draw_size = new phoenix_Vector();
+};
+$hxClasses["luxe.Particle"] = luxe_Particle;
+luxe_Particle.__name__ = ["luxe","Particle"];
+luxe_Particle.prototype = {
+	destroy: function() {
+		if(this.sprite != null) {
+			this.sprite.destroy();
+			this.sprite = null;
+		}
+		this.direction = null;
+		this.move_dir = null;
+		this.speed = null;
+		this.size = null;
+		this.pos = null;
+		this.start_size = null;
+		this.end_size = null;
+		this.size_delta = null;
+		this.color_delta = null;
+		this.color = null;
+		this.end_color = null;
+		this.draw_color = null;
+		this.draw_size = null;
+	}
+	,__class__: luxe_Particle
 };
 var luxe_Physics = function(_core) {
 	this.step_delta = 0.0166666666666666664;
